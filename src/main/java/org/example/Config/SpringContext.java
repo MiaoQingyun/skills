@@ -6,8 +6,6 @@ import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
 
-//表明该类是核心类
-@Configuration
 //注解扫描 <context:component-scan base-package="org.example"/>
 @ComponentScan("org.example")
 //加载配置文件

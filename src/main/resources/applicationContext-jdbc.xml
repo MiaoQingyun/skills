@@ -12,7 +12,7 @@
     <context:property-placeholder location="classpath:jdbc.properties"/>
 
     <!--将数据库链接的信息写成 bean -->
-    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <!--常量注入 里面的name值是set方法后面的首字母小写-->
         <!--引入外面的文件 通过${}方法将值床底进来-->
         <property name="jdbcUrl" value="${jdbc.url}"> </property>
