@@ -65,7 +65,7 @@
         返回一个实例对象
         要在bean里面使用factory标签指定方法名称
     -->
-<!--    <bean id="userDao1" class="org.example.Factory.StaticFactory" factory-method="getUserDao"></bean>-->
+    <bean id="userDao1" class="org.example.Factory.StaticFactory" factory-method="getUserDao"></bean>
     <!--
     bean实例化：动态工厂:先创建工厂对象，在spring里面声明
         再引用动态工厂的bean
