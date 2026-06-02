@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd "
+       xmlns:p="http://www.springframework.org/schema/p"
+>
+
+    <!-- bean:用来配置对象，spring创建对象的时候默认调用的是类里面的无参构造-->
+    <!--
+    id：bean实例 在sping容器中的唯一标识
+    class:bean的全限定名称
+    scope:1、影响bean的创建时机，2、确定bean对象的作用范围：
+            prototype:多例，能有多个
+                      生命周期:创建:当调用getBean()方法的时候，才会创建
+                              运行：对象在使用它就存在
+                              销毁：长时间不用就会被回收机制回收
+            singleton:单例，只有一个
+                      生命周期：创建：加载文件，生成，在加载xml配置文件的时候就已经调用无参方法创建一个bean对象
+                              运行：容器存在，它就存在
+                              销毁：应用卸载，bean对象就销毁
+
+            init-method:指定类中的一个初始化方法的名字，在构造完对象之后就加载初始化方法
+            destroy-method:指定类里面的销毁方法的名字
+
+      -->
+    <bean id="UserDao" class="org.example.DaoImpl.UserDaoImpl"
+          scope="prototype" init-method="init">
+        <!--普通数据注入-->
+    <property name="name" value="liaochunyan"> </property>
+        <property name="age" value="18"> </property>
+        <!--引用数据注入：List-->
+        <property name="strList">
+        <list>
+            <value> aaa</value>
+                <value>  bbb</value>
+                    <value> ccc</value>
+         </list>
+        </property>
+        <!-- Map 类型注入-->
+        <property name="userMap" >
+            <map>
+                <!--key值是随意取的，ref是指向bean的id-->
+                <entry key="user1" value-ref="user1" > </entry>
+                <entry key="user2" value-ref="user2" > </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="user1" class="org.example.Dao.User">
+        <property name="name" value="miao"> </property>
+        <property name="age" value="18"> </property>
+    </bean>
+
+    <bean id="user2" class="org.example.Dao.User">
+        <property name="name" value="liao"> </property>
+        <property name="age" value="18"> </property>
+    </bean>
+    <!--
+    bean实例化的方式:默认无参
+    工厂静态方法：指定一个类，在类里面写静态方法如：
+        public static UserDao1 getUserDao (){
+        return  new UserDao1Impl();
+        返回一个实例对象
+        要在bean里面使用factory标签指定方法名称
+    -->
+<!--    <bean id="userDao1" class="org.example.Factory.StaticFactory" factory-method="getUserDao"></bean>-->
+    <!--
+    bean实例化：动态工厂:先创建工厂对象，在spring里面声明
+        再引用动态工厂的bean
+        -->
+    <bean id="dyFactory" class="org.example.Factory.DyFactory" scope="prototype"> </bean>
+    <bean id="userDaoDy" factory-bean="dyFactory" factory-method="getUserDao1" scope="prototype"> </bean>
+
+    <!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+
+<!--    <bean id="userService" class="org.example.ServiceImpl.UserServiceImpl" scope="prototype">-->
+<!--        &lt;!&ndash;
+               依赖注入:-->
+<!--           set后面的首字母小写 ref是指对对象的引用，后面是类在spring里面的id-->
+<!--           Bean里面依赖注入时，依然会调用被引用·对象的初始化方法和无参构造方法-->
+<!--           &ndash;&gt;-->
+<!--    <property name="userDao" ref="UserDao"></property>-->
+<!-- 通过引入 p 命名空间：
+        1、通过set方法进行依赖注入-->
+<!--    <bean id="userService" class="org.example.ServiceImpl.UserServiceImpl" scope="prototype"-->
+<!--    p:userDao-ref="UserDao"> </bean>-->
+    <!--2、通过有参构造在内部就直接创建对象-->
+    <bean id="userService" class="org.example.ServiceImpl.UserServiceImpl">
+    <constructor-arg name="UserDao" ref="UserDao"> </constructor-arg>
+    </bean>
+
+    <!--引入其他配置文件-->
+    <import resource="applicationContext-jdbc.xml"/>
+
+    <!--配置组件扫描，指定扫描哪些包，这样才会扫描到注解-->
+    <context:component-scan base-package="org.example"/>
+
+
+</beans>
