@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--引入命名空间 将mysql的配置文件导入进来完成解耦合 -->
+
+    <!--加载外部的properties 文件-->
+    <!--加载文件路径的时候 注意不要留空格-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--将数据库链接的信息写成 bean -->
+    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--常量注入 里面的name值是set方法后面的首字母小写-->
+        <!--引入外面的文件 通过${}方法将值床底进来-->
+        <property name="jdbcUrl" value="${jdbc.url}"> </property>
+        <property name="driverClass" value="${jdbc.driver}"> </property>
+        <property name="user" value="${jdbc.username}"> </property>
+        <property name="password" value="${jdbc.password}"> </property>
+    </bean>
+</beans>
